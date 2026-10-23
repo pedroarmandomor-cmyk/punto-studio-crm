@@ -352,15 +352,15 @@ body:not(.on-title) .ticker { opacity: 0; }
 
   <!-- 1 · Title -->
   <section class="slide title-slide" data-speaker="1" data-aura="#ff2e88,#7b5cff,#2fd7ff"
-    data-note="Good morning, everyone. We are team ___. We work in a digital marketing agency, and today we will present the 8 rules of our workplace. Some rules tell you what to do, and some tell you what NOT to do. (≈10 s)">
+    data-note="Good morning, everyone. My name is Pedro, and my teammates are Josué and Emiliano. We work in a digital marketing agency, and today we will present the 8 rules of our workplace. Some rules tell you what to do, and some tell you what NOT to do. (≈10 s)">
     <div>
       <div class="eyebrow in"><span class="dot"></span>Unit II · Commands · Live</div>
       <h1><span class="line"><span>Agency</span></span><span class="line"><span class="grad">House Rules</span></span></h1>
       <p class="in" style="--d:3">Eight rules from our digital marketing agency, written in the imperative mood: four DOs and four DON'Ts.</p>
       <div class="team in" style="--d:4">
-        <span><i style="background:var(--brand)"></i>Speaker 1 · Name</span>
-        <span><i style="background:var(--violet)"></i>Speaker 2 · Name</span>
-        <span><i style="background:var(--sun)"></i>Speaker 3 · Name</span>
+        <span><i style="background:var(--brand)"></i>Pedro Armando Montes de Oca</span>
+        <span><i style="background:var(--violet)"></i>Josué Eli Torres</span>
+        <span><i style="background:var(--sun)"></i>Emiliano Montero</span>
       </div>
     </div>
     <div class="orbit in" style="--d:2" aria-hidden="true">
@@ -597,6 +597,7 @@ body:not(.on-title) .ticker { opacity: 0; }
 (function () {
   const slides = [...document.querySelectorAll('.slide')];
   const speakerColors = { 1: 'var(--brand)', 2: 'var(--violet)', 3: 'var(--sun)' };
+  const speakerNames = { 1: 'Pedro', 2: 'Josué', 3: 'Emiliano' };
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const aurora = document.getElementById('aurora');
   let index = 0, step = 0, startedAt = null, tick = null;
@@ -661,10 +662,10 @@ body:not(.on-title) .ticker { opacity: 0; }
     const sp = cur.dataset.speaker || '1';
     const spEl = document.getElementById('speaker');
     spEl.style.setProperty('--sp', speakerColors[sp]);
-    spEl.querySelector('span').textContent = 'Speaker ' + sp;
+    spEl.querySelector('span').textContent = speakerNames[sp];
     document.getElementById('count').textContent = (index + 1) + ' / ' + slides.length;
     document.getElementById('prog').style.width = ((index + (step ? .5 : 0)) / (slides.length - 1) * 100) + '%';
-    document.getElementById('notesHead').textContent = 'Speaker ' + sp + ' · slide ' + (index + 1);
+    document.getElementById('notesHead').textContent = speakerNames[sp] + ' · slide ' + (index + 1);
     document.getElementById('notesText').textContent = cur.dataset.note || '';
   }
 
