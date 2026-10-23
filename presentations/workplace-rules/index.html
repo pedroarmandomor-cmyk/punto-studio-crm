@@ -9,424 +9,572 @@
 <title>Agency House Rules</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: one full-screen slide at a time, styled like a brand-guidelines book — every rule is a DO or DON'T page. */
+/* Layout: a dark "launch night" stage. Each rule is a social post on a 3D phone; DO posts go live with confetti, DON'T posts get stamped REJECTED. */
 :root {
-  --paper: #f6f4fb;
-  --ink: #1b1530;
-  --muted: #5d5675;
-  --line: #ddd8ea;
-  --brand: #d4146f;      /* hot magenta: the agency's brand colour */
-  --cobalt: #2f3fd6;
-  --do: #0f8a5f;
-  --do-soft: #dcf3e9;
-  --dont: #c8322b;
-  --dont-soft: #fbe2df;
-  --card: #ffffff;
+  --night: #0c0a1d;
+  --ink: #f4f1ff;
+  --muted: #a9a3c9;
+  --glass: rgba(255,255,255,.06);
+  --glass-line: rgba(255,255,255,.12);
+  --brand: #ff2e88;
+  --violet: #7b5cff;
+  --cyan: #2fd7ff;
+  --sun: #ffd23f;
+  --do: #2ee6a0;
+  --dont: #ff4d4d;
+  --phone: #15122b;
+  --post: #ffffff;
+  --post-ink: #17132c;
   --display: "Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
   --body: "Figtree", "Segoe UI", system-ui, sans-serif;
   --mono: "DM Mono", ui-monospace, "Consolas", monospace;
-  color-scheme: light;
+  color-scheme: dark;
 }
 html, body { height: 100%; }
 body {
-  background: var(--paper);
+  background: var(--night);
   color: var(--ink);
   font-family: var(--body);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
-.deck { position: relative; height: 100%; }
+
+/* ---------- Ambient stage ---------- */
+.aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.aurora i {
+  position: absolute; width: 55vmax; height: 55vmax; border-radius: 50%;
+  filter: blur(90px); opacity: .42; mix-blend-mode: screen;
+  transition: background 1.2s ease;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+.aurora i:nth-child(1) { background: var(--a1, var(--brand)); top: -20vmax; left: -15vmax; }
+.aurora i:nth-child(2) { background: var(--a2, var(--violet)); bottom: -25vmax; right: -10vmax; animation-delay: -8s; animation-duration: 28s; }
+.aurora i:nth-child(3) { background: var(--a3, var(--cyan)); top: 30%; left: 40%; width: 30vmax; height: 30vmax; opacity: .22; animation-delay: -14s; }
+@keyframes drift { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vw, 6vh) scale(1.15); } 100% { transform: translate(-6vw, 10vh) scale(.95); } }
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+}
+#confetti { position: fixed; inset: 0; z-index: 8; pointer-events: none; width: 100%; height: 100%; }
+
+.deck { position: relative; z-index: 2; height: 100%; }
 .slide {
   position: absolute; inset: 0;
   display: grid; align-content: center;
-  padding-block: clamp(56px, 8vh, 96px) clamp(64px, 9vh, 104px);
+  padding-block: clamp(56px, 8vh, 96px) clamp(72px, 10vh, 110px);
   padding-left: max(16px, env(safe-area-inset-left, 0px), 6vw);
   padding-right: max(16px, env(safe-area-inset-right, 0px), 6vw);
-  opacity: 0; visibility: hidden;
-  transform: translateX(40px);
-  transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1), visibility 0s linear .55s;
-  overflow-y: auto;
+  visibility: hidden; opacity: 0;
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path .8s cubic-bezier(.77,0,.18,1), opacity .5s ease, visibility 0s linear .8s;
+  overflow-y: auto; overflow-x: hidden;
 }
-.slide.active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-.slide.prev { transform: translateX(-40px); }
+.slide.active { visibility: visible; opacity: 1; clip-path: inset(0 0 0 0); transition-delay: 0s; }
+.slide.prev { clip-path: inset(0 100% 0 0); }
 
 .eyebrow {
-  font-family: var(--mono); font-size: clamp(12px, 1.2vw, 15px);
-  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  font-family: var(--mono); font-size: clamp(12px, 1.15vw, 15px);
+  letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
   display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
 }
-h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.02em; }
+.eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 12px var(--brand); animation: blink 1.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.025em; }
 
-/* ---------- Title slide ---------- */
-.title-slide { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 5vw; align-items: center; }
-.title-slide h1 { font-size: clamp(44px, 7.4vw, 120px); line-height: .92; font-weight: 800; margin-block: 18px 22px; }
-.title-slide h1 .hl { color: var(--brand); }
-.title-slide p { font-size: clamp(16px, 1.7vw, 22px); color: var(--muted); max-width: 34ch; margin: 0; line-height: 1.45; }
-.team { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+/* Staggered entrance for anything marked .in */
+.slide .in { opacity: 0; transform: translateY(28px); }
+.slide.active .in { animation: rise .8s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(.25s + var(--d, 0) * .09s); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* ---------- Title ---------- */
+.title-slide { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 4vw; align-items: center; }
+.title-slide h1 { font-size: clamp(52px, 8.6vw, 150px); line-height: .86; font-weight: 800; margin-block: 22px 26px; }
+.title-slide h1 .line { display: block; overflow: hidden; padding-bottom: .06em; }
+.title-slide h1 .line > span { display: inline-block; transform: translateY(110%); }
+.title-slide.active h1 .line > span { animation: up 1s cubic-bezier(.2,.9,.1,1) forwards; }
+.title-slide.active h1 .line:nth-child(2) > span { animation-delay: .12s; }
+@keyframes up { to { transform: none; } }
+.grad {
+  background: linear-gradient(100deg, var(--brand), var(--violet) 45%, var(--cyan), var(--brand));
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+.title-slide p { font-size: clamp(16px, 1.7vw, 22px); color: var(--muted); max-width: 36ch; margin: 0; line-height: 1.5; }
+.team { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
 .team span {
-  font-family: var(--mono); font-size: 14px; padding: 8px 14px; border-radius: 999px;
-  background: var(--card); border: 1px solid var(--line);
+  font-family: var(--mono); font-size: 14px; padding: 9px 16px; border-radius: 999px;
+  background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(8px);
+  display: inline-flex; gap: 8px; align-items: center;
 }
-.stickers { position: relative; aspect-ratio: 1; max-width: 100%; }
-.sticker {
-  position: absolute; display: grid; place-items: center;
-  border-radius: 28px; font-size: clamp(36px, 5vw, 72px);
-  box-shadow: 0 18px 40px -18px rgba(27,21,48,.35);
-  animation: bob 6s ease-in-out infinite;
-}
-.s1 { inset: 4% 40% 50% 6%; background: var(--brand); transform: rotate(-8deg); }
-.s2 { inset: 14% 4% 46% 52%; background: var(--cobalt); animation-delay: -2s; }
-.s3 { inset: 54% 46% 4% 10%; background: #ffd23f; animation-delay: -4s; }
-.s4 { inset: 58% 6% 8% 58%; background: var(--card); border: 1px solid var(--line); animation-delay: -1s; }
-@keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+.team span i { width: 9px; height: 9px; border-radius: 50%; }
 
-/* ---------- Workplace slide ---------- */
-.place h2 { font-size: clamp(34px, 5vw, 72px); line-height: 1; margin-block: 14px 26px; max-width: 18ch; }
-.place-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.place-grid div {
-  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
-  padding: 20px; display: grid; gap: 8px; align-content: start;
+.orbit { position: relative; aspect-ratio: 1; max-width: 100%; }
+.orbit .core {
+  position: absolute; inset: 22%; border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--brand), var(--violet), var(--cyan), var(--sun), var(--brand));
+  animation: spin 14s linear infinite;
+  box-shadow: 0 0 120px -10px var(--violet);
 }
-.place-grid b { font-size: clamp(30px, 3vw, 42px); }
-.place-grid strong { font-family: var(--display); font-size: clamp(17px, 1.6vw, 22px); }
-.place-grid span { color: var(--muted); font-size: 15px; line-height: 1.4; }
-.legend { display: flex; gap: 14px; margin-top: 26px; flex-wrap: wrap; }
+.orbit .core::after {
+  content: "📣"; position: absolute; inset: 9%; border-radius: 50%; background: var(--night);
+  display: grid; place-items: center; font-size: clamp(56px, 8vw, 120px);
+  animation: spin 14s linear infinite reverse;
+}
+.orbit .chip {
+  position: absolute; display: grid; place-items: center;
+  width: 22%; aspect-ratio: 1; border-radius: 26%;
+  background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(10px);
+  font-size: clamp(26px, 3.4vw, 52px);
+  animation: bob 5s ease-in-out infinite;
+}
+.orbit .c1 { top: 2%; left: 8%; } .orbit .c2 { top: 8%; right: 2%; animation-delay: -1.2s; }
+.orbit .c3 { bottom: 6%; left: 0; animation-delay: -2.4s; } .orbit .c4 { bottom: 0; right: 12%; animation-delay: -3.6s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+
+.ticker {
+  position: fixed; left: 0; right: 0; bottom: calc(66px + env(safe-area-inset-bottom, 0px)); z-index: 3;
+  overflow: hidden; white-space: nowrap; pointer-events: none;
+  border-block: 1px solid var(--glass-line); background: rgba(12,10,29,.55); backdrop-filter: blur(6px);
+  transition: opacity .5s;
+}
+.ticker div { display: inline-block; padding-block: 9px; animation: marquee 38s linear infinite; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.ticker b { color: var(--brand); margin-inline: 18px; font-weight: 500; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+body:not(.on-title) .ticker { opacity: 0; }
+
+/* ---------- Workplace ---------- */
+.place h2 { font-size: clamp(36px, 5.4vw, 86px); line-height: .98; margin-block: 14px 30px; max-width: 16ch; }
+.place-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.pcard {
+  position: relative; overflow: hidden;
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 22px;
+  padding: 22px; display: grid; gap: 10px; align-content: start; backdrop-filter: blur(10px);
+}
+.pcard::before {
+  content: ""; position: absolute; inset: auto -30% -60% auto; width: 80%; aspect-ratio: 1; border-radius: 50%;
+  background: var(--c); filter: blur(40px); opacity: .45;
+}
+.pcard b { font-size: clamp(32px, 3.2vw, 46px); position: relative; }
+.pcard strong { font-family: var(--display); font-size: clamp(19px, 1.8vw, 26px); position: relative; }
+.pcard span { color: var(--muted); font-size: 15px; line-height: 1.45; position: relative; }
+.legend { display: flex; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
 
 .tag {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-weight: 500; font-size: clamp(13px, 1.25vw, 16px);
-  letter-spacing: .1em; text-transform: uppercase;
-  padding: 7px 14px; border-radius: 999px;
+  font-family: var(--mono); font-weight: 500; font-size: clamp(12px, 1.2vw, 15px);
+  letter-spacing: .12em; text-transform: uppercase;
+  padding: 7px 14px; border-radius: 999px; border: 1px solid currentColor;
 }
-.tag.do { background: var(--do-soft); color: var(--do); }
-.tag.dont { background: var(--dont-soft); color: var(--dont); }
+.tag.do { color: var(--do); background: rgba(46,230,160,.1); }
+.tag.dont { color: var(--dont); background: rgba(255,77,77,.1); }
 
 /* ---------- Rule slides ---------- */
-.rule { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 5vw; align-items: center; }
-.rule .num {
-  font-family: var(--display); font-weight: 800; color: var(--muted);
-  font-size: clamp(18px, 1.6vw, 22px); letter-spacing: 0;
+.rule { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 5vw; align-items: center; }
+.rule.is-do { --accent: var(--do); }
+.rule.is-dont { --accent: var(--dont); }
+.rule .bignum {
+  position: absolute; right: 2vw; top: 50%; translate: 0 -50%; z-index: -1;
+  font-family: var(--display); font-weight: 800; font-size: clamp(220px, 42vw, 640px); line-height: .8;
+  color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.07);
+  pointer-events: none; user-select: none;
 }
-.rule h2 {
-  font-size: clamp(32px, 4.9vw, 78px); line-height: 1.02; font-weight: 700;
-  margin-block: 18px 26px;
-}
-.rule h2 .verb { color: var(--accent); }
-.rule.is-do { --accent: var(--do); --accent-soft: var(--do-soft); }
-.rule.is-dont { --accent: var(--dont); --accent-soft: var(--dont-soft); }
+.rule .copy { position: relative; min-width: 0; }
+.rule h2 { font-size: clamp(34px, 5vw, 82px); line-height: 1; font-weight: 800; margin-block: 20px 28px; }
+.rule h2 .verb { color: var(--accent); text-shadow: 0 0 40px var(--accent); }
 .term {
-  font-weight: 700; color: var(--cobalt);
-  background: linear-gradient(transparent 62%, rgba(47,63,214,.14) 62%);
+  color: var(--ink);
+  background: linear-gradient(90deg, rgba(123,92,255,.6), rgba(47,215,255,.4)) no-repeat 0 90% / 100% .22em;
 }
 .why {
-  border-left: 4px solid var(--accent); padding: 4px 0 4px 20px;
-  font-size: clamp(17px, 1.8vw, 25px); line-height: 1.45; max-width: 46ch;
-  opacity: 0; transform: translateY(14px);
-  transition: opacity .4s ease, transform .5s cubic-bezier(.2,.8,.2,1);
+  position: relative; max-width: 46ch;
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
+  padding: 18px 22px 20px 26px; backdrop-filter: blur(10px);
+  font-size: clamp(17px, 1.75vw, 24px); line-height: 1.45; margin: 0;
+  opacity: 0; transform: translateY(18px) scale(.98);
+  transition: opacity .45s ease, transform .6s cubic-bezier(.2,1.2,.3,1);
 }
-.why b.why-label {
-  display: block; font-family: var(--mono); font-size: 13px; font-weight: 500;
-  letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-}
+.why::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 4px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
+.why .why-label { display: block; font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .why .conn { font-weight: 700; color: var(--accent); }
 .slide.revealed .why { opacity: 1; transform: none; }
-.hint {
-  font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 18px;
-  transition: opacity .3s;
-}
-.slide.revealed .hint { opacity: 0; }
+.hint { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 16px; display: inline-flex; gap: 8px; align-items: center; transition: opacity .3s; }
+.hint kbd { font: inherit; border: 1px solid var(--glass-line); border-radius: 6px; padding: 2px 7px; }
+.slide.revealed .hint { opacity: 0 !important; }
 
-.visual {
-  position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 28px;
-  background: var(--accent-soft); display: grid; place-items: center;
-  overflow: hidden;
+/* Phone + post */
+.stage3d { perspective: 1200px; display: grid; justify-items: center; min-width: 0; position: relative; }
+.phone {
+  position: relative; width: min(330px, 100%, 38vh); aspect-ratio: 9 / 18.5;
+  background: var(--phone); border-radius: 46px; padding: 11px;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 50px 100px -30px rgba(0,0,0,.8), 0 0 0 6px rgba(255,255,255,.03), 0 0 90px -20px var(--accent);
+  transform: rotateY(-14deg) rotateX(6deg);
+  transition: transform .25s ease-out;
 }
-.visual .emo { font-size: clamp(80px, 12vw, 190px); line-height: 1; transition: transform .6s cubic-bezier(.2,1.4,.4,1); }
-.slide.active .visual .emo { animation: pop .7s cubic-bezier(.2,1.4,.4,1) both .15s; }
-@keyframes pop { from { transform: scale(.4) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
-.visual .stamp {
-  position: absolute; top: 18px; right: 18px;
-  width: clamp(54px, 6vw, 84px); aspect-ratio: 1; border-radius: 50%;
-  background: var(--accent); color: #fff; display: grid; place-items: center;
-  font-size: clamp(26px, 3vw, 42px); font-weight: 800; font-family: var(--display);
-  box-shadow: 0 10px 24px -10px var(--accent);
+.slide.active .phone { animation: phoneIn 1s cubic-bezier(.2,.9,.2,1) both .2s; }
+@keyframes phoneIn { from { opacity: 0; translate: 0 60px; scale: .9; } }
+.phone::before { content: ""; position: absolute; top: 19px; left: 50%; translate: -50% 0; width: 84px; height: 22px; border-radius: 20px; background: #000; z-index: 3; }
+.screen { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: var(--post); color: var(--post-ink); display: grid; grid-template-rows: auto 1fr auto; }
+.post-head { display: flex; align-items: center; gap: 10px; padding: 44px 14px 10px; font-size: 13px; font-weight: 700; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: conic-gradient(var(--brand), var(--violet), var(--cyan), var(--brand)); padding: 2px; flex: none; }
+.avatar span { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: var(--post); font-size: 14px; }
+.post-head small { display: block; font-weight: 500; color: #7b7594; font-size: 11px; }
+.post-head .more { margin-left: auto; color: #7b7594; font-size: 18px; letter-spacing: 1px; }
+.post-img {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 30% 25%, var(--p1), transparent 60%), radial-gradient(circle at 75% 80%, var(--p2), transparent 55%), var(--p3);
+  transition: filter .4s;
 }
-.visual .gloss {
-  position: absolute; left: 16px; right: 16px; bottom: 16px;
-  background: var(--card); border-radius: 16px; padding: 14px 16px;
-  font-size: 14px; line-height: 1.4; color: var(--muted);
+.post-img .emo { font-size: clamp(70px, 9vw, 124px); filter: drop-shadow(0 18px 24px rgba(0,0,0,.25)); }
+.slide.active .post-img .emo { animation: pop .8s cubic-bezier(.2,1.5,.4,1) both .6s, float 4s ease-in-out infinite 1.4s; }
+@keyframes pop { from { transform: scale(.2) rotate(-20deg); opacity: 0; } }
+@keyframes float { 50% { transform: translateY(-10px) rotate(3deg); } }
+.post-foot { padding: 10px 14px 20px; font-size: 13px; line-height: 1.4; }
+.post-foot .acts { display: flex; gap: 14px; font-size: 19px; margin-bottom: 6px; }
+.post-foot .acts .heart { transition: transform .3s cubic-bezier(.3,1.8,.5,1); display: inline-block; }
+.post-foot b { font-variant-numeric: tabular-nums; }
+.post-foot p { margin: 3px 0 0; color: #4a4463; }
+
+.verdict {
+  position: absolute; z-index: 4; top: 46%; left: 50%;
+  font-family: var(--display); font-weight: 800; font-size: clamp(22px, 2.4vw, 34px); letter-spacing: .04em;
+  padding: 6px 16px; border-radius: 12px; border: 4px solid currentColor;
+  translate: -50% -50%; rotate: -12deg; scale: 2.4; opacity: 0;
+  background: rgba(255,255,255,.92);
+  transition: scale .35s cubic-bezier(.3,1.6,.5,1), opacity .2s;
+  white-space: nowrap;
 }
-.visual .gloss b { display: block; font-family: var(--mono); font-weight: 500; color: var(--cobalt); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+.is-do .verdict { color: #0b9463; }
+.is-dont .verdict { color: #e0262a; }
+.slide.revealed .verdict { scale: 1; opacity: 1; }
+.is-dont.revealed .post-img { filter: grayscale(.85) brightness(.85); }
+.is-dont.shake .stage3d { animation: shake .5s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake { 10%,90% { translate: -2px 0; } 20%,80% { translate: 4px 0; } 30%,50%,70% { translate: -9px 0; } 40%,60% { translate: 9px 0; } }
+.is-do.revealed .heart { transform: scale(1.4); }
+
+.gloss {
+  position: absolute; z-index: 5; left: -10%; top: 14%;
+  max-width: min(250px, 80%);
+  background: rgba(22,18,58,.85); border: 1px solid var(--glass-line); backdrop-filter: blur(14px);
+  border-radius: 16px; padding: 12px 14px; font-size: 13px; line-height: 1.4; color: var(--muted);
+  box-shadow: 0 20px 40px -16px rgba(0,0,0,.6);
+}
+.slide.active .gloss { animation: rise .7s cubic-bezier(.2,.8,.2,1) both 1s; }
+.gloss b { display: block; font-family: var(--mono); font-weight: 500; color: var(--cyan); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
 
 /* ---------- Recap ---------- */
-.recap h2 { font-size: clamp(32px, 4.4vw, 64px); margin-block: 12px 24px; }
+.recap h2 { font-size: clamp(34px, 4.8vw, 72px); margin-block: 12px 26px; }
 .recap-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.recap-grid div {
-  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
-  padding: 16px; display: grid; gap: 10px; align-content: start;
-  opacity: 0; transform: translateY(16px);
+.rcard {
+  position: relative; overflow: hidden;
+  background: var(--glass); border: 1px solid var(--glass-line); border-radius: 20px;
+  padding: 18px 16px; display: grid; gap: 12px; align-content: start; backdrop-filter: blur(10px);
 }
-.slide.active .recap-grid div { animation: rise .5s cubic-bezier(.2,.8,.2,1) forwards; }
-.recap-grid div:nth-child(2) { animation-delay: .06s !important; }
-.recap-grid div:nth-child(3) { animation-delay: .12s !important; }
-.recap-grid div:nth-child(4) { animation-delay: .18s !important; }
-.recap-grid div:nth-child(5) { animation-delay: .24s !important; }
-.recap-grid div:nth-child(6) { animation-delay: .30s !important; }
-.recap-grid div:nth-child(7) { animation-delay: .36s !important; }
-.recap-grid div:nth-child(8) { animation-delay: .42s !important; }
-@keyframes rise { to { opacity: 1; transform: none; } }
-.recap-grid .top { display: flex; justify-content: space-between; align-items: center; font-size: 28px; }
-.recap-grid p { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.2; }
-.recap-grid .tag { font-size: 11px; padding: 4px 9px; }
+.rcard::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--k); box-shadow: 0 0 16px var(--k); }
+.rcard.do { --k: var(--do); } .rcard.dont { --k: var(--dont); }
+.rcard .top { display: flex; justify-content: space-between; align-items: center; font-size: 30px; }
+.rcard .n { font-family: var(--mono); font-size: 12px; color: var(--k); letter-spacing: .08em; }
+.rcard p { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(16px, 1.5vw, 21px); line-height: 1.15; }
 
 /* ---------- Closing ---------- */
-.closing { text-align: left; }
-.closing h1 { font-size: clamp(56px, 10vw, 170px); line-height: .9; font-weight: 800; margin-block: 16px; }
-.closing h1 span { color: var(--brand); }
-.closing p { font-size: clamp(17px, 1.8vw, 24px); color: var(--muted); max-width: 40ch; margin: 0; line-height: 1.45; }
+.closing { justify-items: start; }
+.closing h1 { font-size: clamp(64px, 12vw, 210px); line-height: .86; font-weight: 800; margin-block: 16px 22px; }
+.closing p { font-size: clamp(18px, 1.9vw, 26px); color: var(--muted); max-width: 40ch; margin: 0; line-height: 1.45; }
+.closing .qa { margin-top: 30px; display: inline-flex; gap: 12px; align-items: center; font-family: var(--mono); font-size: 14px; letter-spacing: .12em; text-transform: uppercase; padding: 12px 20px; border-radius: 999px; border: 1px solid var(--glass-line); background: var(--glass); }
 
-/* ---------- Chrome: progress, nav, speaker, timer ---------- */
-.progress { position: fixed; inset: 0 0 auto; height: 5px; background: var(--line); z-index: 5; margin-top: env(safe-area-inset-top, 0px); }
-.progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--cobalt)); transition: width .5s cubic-bezier(.2,.8,.2,1); }
+/* ---------- Chrome ---------- */
+.progress { position: fixed; inset: 0 0 auto; height: 4px; z-index: 9; margin-top: env(safe-area-inset-top, 0px); background: rgba(255,255,255,.08); }
+.progress i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--violet), var(--cyan)); box-shadow: 0 0 14px var(--violet); transition: width .6s cubic-bezier(.2,.8,.2,1); }
 .bar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   font-family: var(--mono); font-size: 13px; color: var(--muted);
-  pointer-events: none;
 }
-.bar > * { pointer-events: auto; }
 .speaker { display: inline-flex; align-items: center; gap: 8px; }
-.speaker i { width: 10px; height: 10px; border-radius: 50%; background: var(--sp, var(--muted)); }
+.speaker i { width: 10px; height: 10px; border-radius: 50%; background: var(--sp, var(--muted)); box-shadow: 0 0 10px var(--sp, transparent); }
 .controls { display: flex; gap: 8px; align-items: center; }
 .controls button {
-  font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line);
-  border-radius: 999px; min-width: 40px; height: 40px; padding: 0 12px; cursor: pointer;
+  font: inherit; color: var(--ink); background: var(--glass); border: 1px solid var(--glass-line);
+  border-radius: 999px; min-width: 42px; height: 42px; padding: 0 12px; cursor: pointer; backdrop-filter: blur(8px);
+  transition: background .2s, border-color .2s;
 }
-.controls button:hover { border-color: var(--ink); }
-.controls button:focus-visible, .notes button:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 2px; }
+.controls button:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.3); }
+.controls button:focus-visible, .notes button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 .count { font-variant-numeric: tabular-nums; min-width: 52px; text-align: center; }
-.timer { font-variant-numeric: tabular-nums; font-weight: 500; }
-.timer.ok { color: var(--do); }
-.timer.late { color: var(--dont); }
+.timer { font-variant-numeric: tabular-nums; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--glass-line); }
+.timer.ok { color: var(--do); border-color: var(--do); }
+.timer.late { color: var(--dont); border-color: var(--dont); }
 
 .notes {
-  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(72px + env(safe-area-inset-bottom, 0px));
-  width: min(420px, calc(100% - 32px)); z-index: 6;
-  background: var(--ink); color: #f1eef9; border-radius: 18px; padding: 18px 20px;
-  font-size: 15px; line-height: 1.5; box-shadow: 0 24px 60px -20px rgba(27,21,48,.6);
+  position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  width: min(420px, calc(100% - 32px)); z-index: 10;
+  background: rgba(22,18,58,.96); border: 1px solid var(--glass-line); color: var(--ink); border-radius: 18px; padding: 18px 20px;
+  font-size: 15px; line-height: 1.5; box-shadow: 0 24px 60px -20px rgba(0,0,0,.8); backdrop-filter: blur(14px);
 }
-.notes header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #a9a2c4; }
+.notes header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .notes button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
 .notes p { margin: 0; }
-.keys { font-family: var(--mono); font-size: 12px; color: #a9a2c4; margin-top: 10px; }
+.keys { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 10px; }
 
-@media (max-width: 820px) {
+@media (max-width: 860px) {
   body { overflow: auto; }
-  .title-slide, .rule { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .stickers { max-width: 260px; }
-  .visual { aspect-ratio: 16 / 10; }
-  .visual .emo { font-size: 72px; }
-  .visual .gloss { position: static; margin: 0 14px 14px; align-self: end; }
-  .visual { display: grid; grid-template-rows: 1fr auto; place-items: center stretch; justify-items: center; }
-  .visual .gloss { justify-self: stretch; }
+  .title-slide, .rule { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .orbit { max-width: 240px; }
+  .phone { width: min(250px, 100%); transform: none; }
+  .gloss { left: 0; top: 8%; }
+  .rule .bignum { font-size: 60vw; top: 20%; }
   .place-grid, .recap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .slide { align-content: start; }
-  .bar .speaker { display: none; }
+  .bar .speaker, .ticker { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .recap-grid div { opacity: 1; transform: none; }
+  .slide .in, .title-slide h1 .line > span { opacity: 1; transform: none; }
 }
 </style>
 
+<div class="aurora" id="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
 <div class="progress" aria-hidden="true"><i id="prog"></i></div>
 
 <main class="deck" id="deck">
 
   <!-- 1 · Title -->
-  <section class="slide title-slide" data-speaker="1"
+  <section class="slide title-slide" data-speaker="1" data-aura="#ff2e88,#7b5cff,#2fd7ff"
     data-note="Good morning, everyone. We are team ___. We work in a digital marketing agency, and today we will present the 8 rules of our workplace. Some rules tell you what to do, and some tell you what NOT to do. (≈10 s)">
     <div>
-      <div class="eyebrow">Unit II · Commands · English</div>
-      <h1>Agency <span class="hl">House Rules</span></h1>
-      <p>Eight rules from our digital marketing agency, written in the imperative mood: four DOs and four DON'Ts.</p>
-      <div class="team">
-        <span>Speaker 1 · Name</span><span>Speaker 2 · Name</span><span>Speaker 3 · Name</span>
+      <div class="eyebrow in"><span class="dot"></span>Unit II · Commands · Live</div>
+      <h1><span class="line"><span>Agency</span></span><span class="line"><span class="grad">House Rules</span></span></h1>
+      <p class="in" style="--d:3">Eight rules from our digital marketing agency, written in the imperative mood: four DOs and four DON'Ts.</p>
+      <div class="team in" style="--d:4">
+        <span><i style="background:var(--brand)"></i>Speaker 1 · Name</span>
+        <span><i style="background:var(--violet)"></i>Speaker 2 · Name</span>
+        <span><i style="background:var(--sun)"></i>Speaker 3 · Name</span>
       </div>
     </div>
-    <div class="stickers" aria-hidden="true">
-      <div class="sticker s1">📣</div>
-      <div class="sticker s2">📊</div>
-      <div class="sticker s3">💡</div>
-      <div class="sticker s4">🎯</div>
+    <div class="orbit in" style="--d:2" aria-hidden="true">
+      <div class="core"></div>
+      <div class="chip c1">📊</div><div class="chip c2">💡</div><div class="chip c3">🎯</div><div class="chip c4">📱</div>
     </div>
   </section>
 
   <!-- 2 · Workplace -->
-  <section class="slide place" data-speaker="1"
-    data-note="Our workplace is a marketing agency. We create campaigns, we manage social media for clients, we sell with ads, and we measure the results with data. Green means DO. Red means DON'T. (≈12 s)">
-    <div class="eyebrow">Our workplace</div>
-    <h2>A digital marketing agency</h2>
+  <section class="slide place" data-speaker="1" data-aura="#7b5cff,#2fd7ff,#ff2e88"
+    data-note="Our workplace is a marketing agency. We create campaigns, we publish content on social media, we run paid ads, and we measure the results with data. Green means DO. Red means DON'T. (≈12 s)">
+    <div class="eyebrow in"><span class="dot"></span>Our workplace</div>
+    <h2 class="in" style="--d:1">A digital <span class="grad">marketing</span> agency</h2>
     <div class="place-grid">
-      <div><b>🎨</b><strong>Create</strong><span>Campaigns, posts and copywriting for our clients' brands.</span></div>
-      <div><b>📱</b><strong>Publish</strong><span>Social media content planned in a content calendar.</span></div>
-      <div><b>💸</b><strong>Advertise</strong><span>Paid ads on Meta, Google and TikTok with a fixed budget.</span></div>
-      <div><b>📈</b><strong>Measure</strong><span>KPIs, conversion rate and ROI on an analytics dashboard.</span></div>
+      <div class="pcard in" style="--d:2;--c:var(--brand)"><b>🎨</b><strong>Create</strong><span>Campaigns, posts and copywriting for our clients' brands.</span></div>
+      <div class="pcard in" style="--d:3;--c:var(--violet)"><b>📱</b><strong>Publish</strong><span>Social media content planned in a content calendar.</span></div>
+      <div class="pcard in" style="--d:4;--c:var(--sun)"><b>💸</b><strong>Advertise</strong><span>Paid ads on Meta, Google and TikTok with a fixed budget.</span></div>
+      <div class="pcard in" style="--d:5;--c:var(--cyan)"><b>📈</b><strong>Measure</strong><span>KPIs, conversion rate and ROI on an analytics dashboard.</span></div>
     </div>
-    <div class="legend"><span class="tag do">✓ Do · positive</span><span class="tag dont">✕ Don't · negative</span></div>
+    <div class="legend in" style="--d:6"><span class="tag do">✓ Do · positive</span><span class="tag dont">✕ Don't · negative</span></div>
   </section>
 
   <!-- 3 · Rule 1 -->
-  <section class="slide rule is-do" data-speaker="1" data-steps="1"
+  <section class="slide rule is-do" data-speaker="1" data-steps="1" data-aura="#2ee6a0,#7b5cff,#2fd7ff"
     data-note="Rule number one: Follow the brand guidelines in every design. Why? Because the same logo, colours and fonts build brand awareness, and the client trusts us more. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 01 / 08</span><span class="tag do">✓ Do</span></div>
-      <h2><span class="verb">Follow</span> the <span class="term">brand guidelines</span> in every design.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">Because</span> the same logo, colours and fonts build <span class="term">brand awareness</span>, and the client trusts us more.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">01</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 01 / 08</span><span class="tag do">✓ Do</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Follow</span> the <span class="term">brand guidelines</span> in every design.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">Because</span> the same logo, colours and fonts build <span class="term">brand awareness</span>, and the client trusts us more.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✓</span><span class="emo">🎨</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#ffd23f;--p2:#ff2e88;--p3:#ffe9f3">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>agency.studio<small>Sponsored</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">🎨</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">❤️</span><span>💬</span><span>↗</span></div><b>12,480 likes</b><p>Same logo, same colours, same fonts. #brandguidelines</p></div>
+      </div><div class="verdict">✓ APPROVED</div></div>
       <div class="gloss"><b>Brand guidelines</b>The official rules for a brand's logo, colours, fonts and tone.</div>
     </div>
   </section>
 
   <!-- 4 · Rule 2 -->
-  <section class="slide rule is-dont" data-speaker="1" data-steps="1"
+  <section class="slide rule is-dont" data-speaker="1" data-steps="1" data-aura="#ff4d4d,#7b5cff,#ff2e88"
     data-note="Rule number two: Don't publish a post without the client's approval. Why? To prevent mistakes that can damage the brand's reputation. Once a post is online, everybody can see it. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 02 / 08</span><span class="tag dont">✕ Don't</span></div>
-      <h2><span class="verb">Don't publish</span> a post without the client's <span class="term">approval</span>.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">To prevent</span> mistakes that can damage the brand's <span class="term">reputation</span>. Once a post is online, everybody can see it.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">02</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 02 / 08</span><span class="tag dont">✕ Don't</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Don't publish</span> a post without the client's <span class="term">approval</span>.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">To prevent</span> mistakes that can damage the brand's <span class="term">reputation</span>. Once a post is online, everybody can see it.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✕</span><span class="emo">📵</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#ff9a9a;--p2:#7b5cff;--p3:#f1ecff">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>agency.studio<small>Draft · not approved</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">📵</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">🤍</span><span>💬</span><span>↗</span></div><b>Waiting for the client…</b><p>Typo in the price: $9.99 → $99.9 😬</p></div>
+      </div><div class="verdict">✕ REJECTED</div></div>
       <div class="gloss"><b>Approval</b>The client's "yes" before any content goes live.</div>
     </div>
   </section>
 
   <!-- 5 · Rule 3 -->
-  <section class="slide rule is-do" data-speaker="2" data-steps="1"
+  <section class="slide rule is-do" data-speaker="2" data-steps="1" data-aura="#2ee6a0,#2fd7ff,#7b5cff"
     data-note="Rule number three: Read the client brief carefully before you start a campaign. Why? So that our ideas match the client's goals and the target audience. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 03 / 08</span><span class="tag do">✓ Do</span></div>
-      <h2><span class="verb">Read</span> the <span class="term">client brief</span> carefully before you start a campaign.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">So that</span> our ideas match the client's goals and the <span class="term">target audience</span>.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">03</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 03 / 08</span><span class="tag do">✓ Do</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Read</span> the <span class="term">client brief</span> carefully before you start a campaign.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">So that</span> our ideas match the client's goals and the <span class="term">target audience</span>.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✓</span><span class="emo">📋</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#2fd7ff;--p2:#2ee6a0;--p3:#e7fbff">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>agency.studio<small>Campaign brief</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">📋</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">❤️</span><span>💬</span><span>↗</span></div><b>Goal: +20% sales</b><p>Audience: students, 18–24, Morelos 🎯</p></div>
+      </div><div class="verdict">✓ ON TARGET</div></div>
       <div class="gloss"><b>Target audience</b>The specific group of people a campaign wants to reach.</div>
     </div>
   </section>
 
   <!-- 6 · Rule 4 -->
-  <section class="slide rule is-dont" data-speaker="2" data-steps="1"
+  <section class="slide rule is-dont" data-speaker="2" data-steps="1" data-aura="#ff4d4d,#ffd23f,#7b5cff"
     data-note="Rule number four: Never miss a deadline in the content calendar. Why? Because a late campaign loses engagement, and the client loses money. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 04 / 08</span><span class="tag dont">✕ Don't</span></div>
-      <h2><span class="verb">Never miss</span> a <span class="term">deadline</span> in the <span class="term">content calendar</span>.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">Because</span> a late campaign loses <span class="term">engagement</span>, and the client loses money.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">04</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 04 / 08</span><span class="tag dont">✕ Don't</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Never miss</span> a <span class="term">deadline</span> in the <span class="term">content calendar</span>.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">Because</span> a late campaign loses <span class="term">engagement</span>, and the client loses money.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✕</span><span class="emo">⏰</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#ffd23f;--p2:#ff4d4d;--p3:#fff6dc">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>agency.studio<small>Scheduled: Friday 9:00</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">⏰</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">🤍</span><span>💬</span><span>↗</span></div><b>Posted 3 days late</b><p>A Black Friday post… on Monday 📉</p></div>
+      </div><div class="verdict">✕ TOO LATE</div></div>
       <div class="gloss"><b>Content calendar</b>The plan that shows what we publish, where and when.</div>
     </div>
   </section>
 
   <!-- 7 · Rule 5 -->
-  <section class="slide rule is-do" data-speaker="2" data-steps="1"
+  <section class="slide rule is-do" data-speaker="2" data-steps="1" data-aura="#2ee6a0,#7b5cff,#ff2e88"
     data-note="Rule number five: Update the CRM after every call with a client. Why? So that the whole team knows the status of each client, and we don't lose any leads. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 05 / 08</span><span class="tag do">✓ Do</span></div>
-      <h2><span class="verb">Update</span> the <span class="term">CRM</span> after every call with a client.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">So that</span> the whole team knows the status of each client, and we don't lose any <span class="term">leads</span>.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">05</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 05 / 08</span><span class="tag do">✓ Do</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Update</span> the <span class="term">CRM</span> after every call with a client.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">So that</span> the whole team knows the status of each client, and we don't lose any <span class="term">leads</span>.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✓</span><span class="emo">🗂️</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#7b5cff;--p2:#2fd7ff;--p3:#efeaff">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>CRM · Clients<small>Updated 2 min ago</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">🗂️</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">✅</span><span>📞</span><span>📅</span></div><b>Lead: Café Morelos</b><p>Status: proposal sent · next call Tuesday</p></div>
+      </div><div class="verdict">✓ UPDATED</div></div>
       <div class="gloss"><b>CRM</b>Customer Relationship Management: the system where we save every client and lead.</div>
     </div>
   </section>
 
   <!-- 8 · Rule 6 -->
-  <section class="slide rule is-dont" data-speaker="2" data-steps="1"
+  <section class="slide rule is-dont" data-speaker="2" data-steps="1" data-aura="#ff4d4d,#7b5cff,#2fd7ff"
     data-note="Rule number six: Don't share client passwords or data in personal chats. Why? To protect the client's privacy and to avoid legal problems for the agency. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 06 / 08</span><span class="tag dont">✕ Don't</span></div>
-      <h2><span class="verb">Don't share</span> client passwords or <span class="term">data</span> in personal chats.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">To protect</span> the client's <span class="term">privacy</span> and <span class="conn">to avoid</span> legal problems for the agency.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">06</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 06 / 08</span><span class="tag dont">✕ Don't</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Don't share</span> client passwords or <span class="term">data</span> in personal chats.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">To protect</span> the client's <span class="term">privacy</span> and <span class="conn">to avoid</span> legal problems for the agency.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✕</span><span class="emo">🔐</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#2fd7ff;--p2:#ff4d4d;--p3:#eaf6ff">
+        <div class="post-head"><span class="avatar"><span>💬</span></span><div>Chat "Friends 🍕"<small>12 members</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">🔐</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">⚠️</span><span>💬</span><span>↗</span></div><b>"The client's password is…"</b><p>Seen by 12 people 👀</p></div>
+      </div><div class="verdict">✕ DATA LEAK</div></div>
       <div class="gloss"><b>Data privacy</b>Keeping client information safe and confidential.</div>
     </div>
   </section>
 
   <!-- 9 · Rule 7 -->
-  <section class="slide rule is-do" data-speaker="3" data-steps="1"
+  <section class="slide rule is-do" data-speaker="3" data-steps="1" data-aura="#2ee6a0,#2fd7ff,#ffd23f"
     data-note="Rule number seven: Check the KPIs on the analytics dashboard every week. Why? Because the data shows us if the conversion rate and the ROI are growing. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 07 / 08</span><span class="tag do">✓ Do</span></div>
-      <h2><span class="verb">Check</span> the <span class="term">KPIs</span> on the <span class="term">analytics dashboard</span> every week.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">Because</span> the data shows us if the <span class="term">conversion rate</span> and the <span class="term">ROI</span> are growing.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">07</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 07 / 08</span><span class="tag do">✓ Do</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Check</span> the <span class="term">KPIs</span> on the <span class="term">analytics dashboard</span> every week.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">Because</span> the data shows us if the <span class="term">conversion rate</span> and the <span class="term">ROI</span> are growing.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✓</span><span class="emo">📊</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#2ee6a0;--p2:#2fd7ff;--p3:#e6fff5">
+        <div class="post-head"><span class="avatar"><span>📈</span></span><div>Analytics<small>This week · example data</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">📊</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">🟢</span><span>🟢</span><span>🟢</span></div><b>Conversion 3.8% ▲ · ROI 240% ▲</b><p>Good week: keep the campaign running.</p></div>
+      </div><div class="verdict">✓ GROWING</div></div>
       <div class="gloss"><b>KPI · ROI</b>Key Performance Indicator · Return On Investment: the money a campaign earns back.</div>
     </div>
   </section>
 
   <!-- 10 · Rule 8 -->
-  <section class="slide rule is-dont" data-speaker="3" data-steps="1"
+  <section class="slide rule is-dont" data-speaker="3" data-steps="1" data-aura="#ff4d4d,#ff2e88,#7b5cff"
     data-note="Rule number eight: Don't launch an ad without an A/B test. Why? Because testing two versions helps us spend the budget on the ad that works better. (≈13 s)">
-    <div>
-      <div class="eyebrow"><span class="num">Rule 08 / 08</span><span class="tag dont">✕ Don't</span></div>
-      <h2><span class="verb">Don't launch</span> an ad without an <span class="term">A/B test</span>.</h2>
-      <p class="why"><b class="why-label">Why?</b><span class="conn">Because</span> testing two versions helps us spend the <span class="term">budget</span> on the ad that works better.</p>
-      <div class="hint">Press → to show why</div>
+    <span class="bignum" aria-hidden="true">08</span>
+    <div class="copy">
+      <div class="eyebrow in"><span>Rule 08 / 08</span><span class="tag dont">✕ Don't</span></div>
+      <h2 class="in" style="--d:1"><span class="verb">Don't launch</span> an ad without an <span class="term">A/B test</span>.</h2>
+      <p class="why"><span class="why-label">Why?</span><span class="conn">Because</span> testing two versions helps us spend the <span class="term">budget</span> on the ad that works better.</p>
+      <div class="hint in" style="--d:3">Press <kbd>→</kbd> to show why</div>
     </div>
-    <div class="visual" aria-hidden="true">
-      <span class="stamp">✕</span><span class="emo">🧪</span>
+    <div class="stage3d" aria-hidden="true">
+      <div class="phone"><div class="screen" style="--p1:#ff2e88;--p2:#ffd23f;--p3:#fff0f6">
+        <div class="post-head"><span class="avatar"><span>✦</span></span><div>Ads Manager<small>Version A only</small></div><span class="more">···</span></div>
+        <div class="post-img"><span class="emo">🧪</span></div>
+        <div class="post-foot"><div class="acts"><span class="heart">💸</span><span>💸</span><span>💸</span></div><b>Budget spent: 100%</b><p>Very few clicks, and no version B to compare.</p></div>
+      </div><div class="verdict">✕ NO TEST</div></div>
       <div class="gloss"><b>A/B test</b>Showing two versions of an ad to see which one performs better.</div>
     </div>
   </section>
 
   <!-- 11 · Recap -->
-  <section class="slide recap" data-speaker="3"
+  <section class="slide recap" data-speaker="3" data-aura="#ff2e88,#7b5cff,#2ee6a0"
     data-note="To sum up: follow these eight rules, and the agency works with quality, efficiency and safety for our clients' data. (≈8 s)">
-    <div class="eyebrow">Recap</div>
-    <h2>Eight rules, one goal: happy clients</h2>
+    <div class="eyebrow in"><span class="dot"></span>Recap</div>
+    <h2 class="in" style="--d:1">Eight rules, one goal: <span class="grad">happy clients</span></h2>
     <div class="recap-grid">
-      <div><span class="top">🎨<span class="tag do">✓ Do</span></span><p>Follow the brand guidelines.</p></div>
-      <div><span class="top">📵<span class="tag dont">✕ Don't</span></span><p>Don't publish without approval.</p></div>
-      <div><span class="top">📋<span class="tag do">✓ Do</span></span><p>Read the client brief.</p></div>
-      <div><span class="top">⏰<span class="tag dont">✕ Don't</span></span><p>Never miss a deadline.</p></div>
-      <div><span class="top">🗂️<span class="tag do">✓ Do</span></span><p>Update the CRM.</p></div>
-      <div><span class="top">🔐<span class="tag dont">✕ Don't</span></span><p>Don't share client data.</p></div>
-      <div><span class="top">📊<span class="tag do">✓ Do</span></span><p>Check the KPIs weekly.</p></div>
-      <div><span class="top">🧪<span class="tag dont">✕ Don't</span></span><p>Don't launch without an A/B test.</p></div>
+      <div class="rcard do in" style="--d:2"><span class="top">🎨<span class="n">01 · DO</span></span><p>Follow the brand guidelines.</p></div>
+      <div class="rcard dont in" style="--d:3"><span class="top">📵<span class="n">02 · DON'T</span></span><p>Don't publish without approval.</p></div>
+      <div class="rcard do in" style="--d:4"><span class="top">📋<span class="n">03 · DO</span></span><p>Read the client brief.</p></div>
+      <div class="rcard dont in" style="--d:5"><span class="top">⏰<span class="n">04 · DON'T</span></span><p>Never miss a deadline.</p></div>
+      <div class="rcard do in" style="--d:6"><span class="top">🗂️<span class="n">05 · DO</span></span><p>Update the CRM.</p></div>
+      <div class="rcard dont in" style="--d:7"><span class="top">🔐<span class="n">06 · DON'T</span></span><p>Don't share client data.</p></div>
+      <div class="rcard do in" style="--d:8"><span class="top">📊<span class="n">07 · DO</span></span><p>Check the KPIs weekly.</p></div>
+      <div class="rcard dont in" style="--d:9"><span class="top">🧪<span class="n">08 · DON'T</span></span><p>Don't launch without an A/B test.</p></div>
     </div>
   </section>
 
   <!-- 12 · Closing -->
-  <section class="slide closing" data-speaker="3"
+  <section class="slide closing" data-speaker="3" data-aura="#ff2e88,#2fd7ff,#ffd23f"
     data-note="Thank you for your attention. Do you have any questions? (≈5 s)">
-    <div class="eyebrow">End of presentation</div>
-    <h1>Thank <span>you!</span></h1>
-    <p>Any questions? Ask us about our rules.</p>
+    <div class="eyebrow in"><span class="dot"></span>End of presentation</div>
+    <h1 class="in" style="--d:1">Thank<br><span class="grad">you!</span></h1>
+    <p class="in" style="--d:2">Follow the rules, and every campaign goes live without problems.</p>
+    <div class="qa in" style="--d:3">💬 Any questions?</div>
   </section>
 
 </main>
+
+<div class="ticker" aria-hidden="true"><div>
+  <span>Brand guidelines</span><b>✦</b><span>Client brief</span><b>✦</b><span>Target audience</span><b>✦</b><span>Content calendar</span><b>✦</b><span>Engagement</span><b>✦</b><span>CRM</span><b>✦</b><span>Leads</span><b>✦</b><span>KPIs</span><b>✦</b><span>Conversion rate</span><b>✦</b><span>ROI</span><b>✦</b><span>A/B test</span><b>✦</b><span>Budget</span><b>✦</b>
+  <span>Brand guidelines</span><b>✦</b><span>Client brief</span><b>✦</b><span>Target audience</span><b>✦</b><span>Content calendar</span><b>✦</b><span>Engagement</span><b>✦</b><span>CRM</span><b>✦</b><span>Leads</span><b>✦</b><span>KPIs</span><b>✦</b><span>Conversion rate</span><b>✦</b><span>ROI</span><b>✦</b><span>A/B test</span><b>✦</b><span>Budget</span><b>✦</b>
+</div></div>
 
 <div class="bar">
   <span class="speaker" id="speaker"><i></i><span>Speaker 1</span></span>
@@ -448,22 +596,55 @@ h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spac
 <script>
 (function () {
   const slides = [...document.querySelectorAll('.slide')];
-  const speakerColors = { 1: 'var(--brand)', 2: 'var(--cobalt)', 3: '#e0a800' };
-  let index = 0, step = 0;
-  let startedAt = null, tick = null;
+  const speakerColors = { 1: 'var(--brand)', 2: 'var(--violet)', 3: 'var(--sun)' };
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const aurora = document.getElementById('aurora');
+  let index = 0, step = 0, startedAt = null, tick = null;
 
-  function startTimer() {
-    startedAt = Date.now();
-    clearInterval(tick);
-    tick = setInterval(renderTimer, 250);
-    renderTimer();
+  /* ---- Confetti ---- */
+  const cv = document.getElementById('confetti');
+  const ctx = cv.getContext('2d');
+  let bits = [], raf = null;
+  function sizeCanvas() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+  sizeCanvas(); addEventListener('resize', sizeCanvas);
+  function burst(x, y) {
+    if (reduced) return;
+    const cols = ['#2ee6a0', '#ff2e88', '#7b5cff', '#2fd7ff', '#ffd23f'];
+    for (let i = 0; i < 140; i++) {
+      const a = Math.random() * Math.PI * 2, v = 4 + Math.random() * 9;
+      bits.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 6, r: 4 + Math.random() * 6, c: cols[i % cols.length], rot: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 1 });
+    }
+    if (!raf) loop();
   }
+  function loop() {
+    const d = devicePixelRatio;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    bits = bits.filter(b => b.life > 0);
+    for (const b of bits) {
+      b.vy += .28; b.vx *= .985; b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.life -= .009;
+      ctx.save(); ctx.globalAlpha = Math.max(0, b.life); ctx.translate(b.x * d, b.y * d); ctx.rotate(b.rot);
+      ctx.fillStyle = b.c; ctx.fillRect(-b.r * d / 2, -b.r * d / 4, b.r * d, b.r * d / 2); ctx.restore();
+    }
+    raf = bits.length ? requestAnimationFrame(loop) : null;
+  }
+
+  /* ---- Timer ---- */
+  function startTimer() { startedAt = Date.now(); clearInterval(tick); tick = setInterval(renderTimer, 250); renderTimer(); }
   function renderTimer() {
     const el = document.getElementById('timer');
     const s = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0;
     el.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     el.classList.toggle('ok', s >= 130 && s <= 145);
     el.classList.toggle('late', s > 145);
+  }
+
+  function onReveal(sl) {
+    if (sl.classList.contains('is-do')) {
+      const r = sl.querySelector('.phone').getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height * .45);
+    } else if (sl.classList.contains('is-dont')) {
+      sl.classList.remove('shake'); void sl.offsetWidth; sl.classList.add('shake');
+    }
   }
 
   function render() {
@@ -474,6 +655,9 @@ h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spac
       sl.setAttribute('aria-hidden', i === index ? 'false' : 'true');
     });
     const cur = slides[index];
+    document.body.classList.toggle('on-title', index === 0);
+    const aura = (cur.dataset.aura || '').split(',');
+    if (aura.length === 3) ['--a1', '--a2', '--a3'].forEach((k, i) => aurora.style.setProperty(k, aura[i]));
     const sp = cur.dataset.speaker || '1';
     const spEl = document.getElementById('speaker');
     spEl.style.setProperty('--sp', speakerColors[sp]);
@@ -487,19 +671,15 @@ h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spac
   function next() {
     if (!startedAt) startTimer();
     const steps = +(slides[index].dataset.steps || 0);
-    if (step < steps) { step++; }
-    else if (index < slides.length - 1) { index++; step = 0; }
-    render();
+    if (step < steps) { step++; render(); onReveal(slides[index]); }
+    else if (index < slides.length - 1) { index++; step = 0; render(); }
   }
   function prev() {
-    if (step > 0) { step--; }
+    if (step > 0) step--;
     else if (index > 0) { index--; step = +(slides[index].dataset.steps || 0); }
     render();
   }
-  function toggleNotes() {
-    const n = document.getElementById('notes');
-    n.hidden = !n.hidden;
-  }
+  function toggleNotes() { const n = document.getElementById('notes'); n.hidden = !n.hidden; }
 
   document.getElementById('btnNext').addEventListener('click', next);
   document.getElementById('btnPrev').addEventListener('click', prev);
@@ -509,26 +689,21 @@ h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spac
   document.addEventListener('keydown', (e) => {
     if (e.target.closest && e.target.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
     switch (e.key) {
-      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
-        e.preventDefault(); next(); break;
-      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace':
-        e.preventDefault(); prev(); break;
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
       case 'Home': index = 0; step = 0; render(); break;
       case 'End': index = slides.length - 1; step = 0; render(); break;
       case 'n': case 'N': toggleNotes(); break;
       case 't': case 'T': startTimer(); break;
       case 'f': case 'F':
-        try {
-          if (document.fullscreenElement) document.exitFullscreen();
-          else document.documentElement.requestFullscreen().catch(() => {});
-        } catch (err) {}
+        try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); } catch (err) {}
         break;
     }
   });
 
-  // Click on the slide (not on controls) advances; swipe on touch screens.
-  document.getElementById('deck').addEventListener('click', (e) => {
-    if (window.matchMedia('(max-width: 820px)').matches) return;
+  // Click advances on desktop; swipe on touch screens.
+  document.getElementById('deck').addEventListener('click', () => {
+    if (window.matchMedia('(max-width: 860px)').matches) return;
     next();
   });
   let tx = null;
@@ -538,6 +713,14 @@ h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spac
     const dx = e.changedTouches[0].clientX - tx;
     if (Math.abs(dx) > 50) (dx < 0 ? next : prev)();
     tx = null;
+  });
+
+  // Phones tilt toward the mouse.
+  if (!reduced) document.addEventListener('mousemove', (e) => {
+    const ph = slides[index].querySelector('.phone');
+    if (!ph || window.matchMedia('(max-width: 860px)').matches) return;
+    const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+    ph.style.transform = 'rotateY(' + (-14 + x * 22) + 'deg) rotateX(' + (6 - y * 14) + 'deg)';
   });
 
   render();
