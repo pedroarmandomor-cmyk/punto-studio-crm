@@ -1,0 +1,31 @@
+PROMPTS PARA IMÁGENES — QUINTO SOL (Brasil)
+=============================================
+[REF] = adjunta la imagen de la botella (bottle.png) como referencia.
+Genera sin texto: los títulos y las leyendas se agregan en el PDF.
+
+1. PORTADA — vertical 3:4 [REF]
+Premium product photograph of the attached mezcal bottle (keep its exact shape, black and gold Aztec-style engraved pattern and label), standing on a rough Oaxacan stone surface. Background: a field of blue-green espadín agave plants at golden hour, warm orange sunset sky, soft haze. Framing the edges: lush dark green tropical monstera leaves and a few orange tropical flowers, suggesting Brazil. Warm cinematic lighting, rim light on the bottle, shallow depth of field, rich deep jungle green and gold color palette, editorial luxury spirits advertising. No text, no letters.
+
+2. ORIGEN: MAESTRO MEZCALERO — horizontal 16:9
+Documentary photograph of a Mexican master mezcal maker in his 50s, weathered hands, straw hat, white cotton shirt, standing beside a traditional earthen pit oven (horno de pozo) releasing smoke, cooked agave hearts (piñas) piled nearby, rustic palenque in Oaxaca with adobe walls and copper still in background. Late afternoon golden light through smoke, authentic, respectful, natural skin texture, 35mm film look, warm earthy tones with deep greens. No text.
+
+3. INSTAGRAM, PORTADA DEL REEL — vertical 9:16 [REF]
+Vertical lifestyle product photo: the attached mezcal bottle (exact design preserved) on a dark wooden bar of a rooftop terrace in Rio de Janeiro at sunset, next to a short glass of mezcal with an orange slice and a small dish of worm salt. Background softly blurred: Sugarloaf Mountain and Guanabara Bay under an orange-pink sky. Tropical plants with monstera leaves at the frame edges. Warm golden hour light, premium spirits advertising, shallow depth of field. Leave empty space in the top third for text. No text.
+
+4. INSTAGRAM, CARRUSEL DE AUTENTICIDAD — vertical 4:5 [REF]
+Macro close-up of the neck and upper body of the attached mezcal bottle, showing an intact gold seal on the stopper and the engraved black and gold pattern in sharp detail. Clean deep jungle-green background, soft studio lighting with a warm golden rim light, crisp reflections, luxury product photography, high detail. No text.
+
+5. FACEBOOK, BLACK FRIDAY / REGALO — cuadrada 1:1 [REF]
+Luxury gift product shot: the attached mezcal bottle (exact design) standing next to its open matte black gift box with gold details, on a deep jungle-green velvet surface. Around it: dark green tropical monstera leaves, two orange tropical flowers, a few gold ribbons. Warm spotlight from above, elegant shadows, festive premium mood for holiday gifting. Leave empty space on the left side for text. No text.
+
+6. YOUTUBE, MINIATURA — horizontal 16:9
+Cinematic close-up of the weathered hands of an older Mexican mezcal maker holding a freshly roasted agave heart, caramelized brown fibers, smoke rising, blurred palenque and pit oven behind. Dramatic warm side light, dark background, deep green and amber tones, documentary film still, extremely detailed textures. No text.
+
+7. TIKTOK, "MEZCALINHA" — vertical 9:16 [REF]
+Vertical overhead-angle photo of a bartender's hands (adult) muddling lime wedges and sugar in a rocks glass on a wooden bar counter, a finished caipirinha-style cocktail with crushed ice, lime and mint beside it, and the attached mezcal bottle (exact design) next to the glasses. Tropical bar in Rio with hanging plants and warm string lights in the soft background. Vibrant, fresh, appetizing, natural light, social media style but premium. No text.
+
+8. WHATSAPP, FOTO DE CATÁLOGO / PERFIL — cuadrada 1:1 [REF]
+Clean centered product photo of the attached mezcal bottle (exact design) on a warm cream background, a large soft golden sun circle behind it, subtle shadow on the floor, one monstera leaf entering from the corner. Minimal, premium, e-commerce style, even soft lighting. No text.
+
+9. CELEBRACIÓN, RÉVEILLON — horizontal 16:9 [REF opcional]
+Group of four adult friends in their 30s dressed in white, celebrating New Year's Eve (Réveillon) on a terrace overlooking Copacabana beach with fireworks over the sea, gently toasting with small glasses, relaxed and elegant, smiling. On the table: the attached mezcal bottle, limes and tropical fruit. Warm festive light, candid editorial photography, moderate and sophisticated mood. No text.
